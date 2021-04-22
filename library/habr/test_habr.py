@@ -4,7 +4,7 @@ from lib import HabrPage, Article
 class TestHabrPage:
     def test_posts_count(self):
         # Given
-        habrPage = HabrPage("index.html")
+        habrPage = HabrPage.from_filename("index.html")
 
         # When
         posts = habrPage.posts()
@@ -14,7 +14,7 @@ class TestHabrPage:
 
     def test_posts_title(self):
         # Given
-        habrPage = HabrPage("index.html")
+        habrPage = HabrPage.from_filename("index.html")
 
         # When
         post = habrPage.posts()[0]
@@ -24,7 +24,7 @@ class TestHabrPage:
 
     def test_posts_url(self):
         # Given
-        habrPage = HabrPage("index.html")
+        habrPage = HabrPage.from_filename("index.html")
 
         # When
         post = habrPage.posts()[0]
@@ -34,7 +34,7 @@ class TestHabrPage:
 
     def test_posts_time(self):
         # Given
-        habrPage = HabrPage("index.html")
+        habrPage = HabrPage.from_filename("index.html")
 
         # When
         post = habrPage.posts()[0]
@@ -44,7 +44,7 @@ class TestHabrPage:
 
     def test_posts_content_startswith(self):
         # Given
-        habrPage = HabrPage("index.html")
+        habrPage = HabrPage.from_filename("index.html")
 
         # When
         post = habrPage.posts()[0]
@@ -56,7 +56,7 @@ class TestHabrPage:
 
     def test_posts_find_by_keyword(self):
         # Given
-        habrPage = HabrPage("index.html")
+        habrPage = HabrPage.from_filename("index.html")
         keywords = ["python"]
 
         # When

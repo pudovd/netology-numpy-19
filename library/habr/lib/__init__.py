@@ -2,12 +2,11 @@ from bs4 import BeautifulSoup
 
 
 class HabrPage:
-    def __init__(self, filename):
-        self._filename = filename
+    def __init__(self, html_doc):
+        self.html_doc = html_doc
 
     def posts(self):
-        html_doc = open(self._filename, "r")
-        soup = BeautifulSoup(html_doc, "html.parser")
+        soup = BeautifulSoup(self.html_doc, "html.parser")
 
         html_articles = soup.find_all("article")
 
@@ -17,6 +16,11 @@ class HabrPage:
 
     def find_by_keywords(self, keywords):
         return [post for post in self.posts() if post.has_keywords(keywords)]
+
+    @classmethod
+    def from_filename(cls, filename):
+        html_doc = open(filename, "r")
+        return HabrPage(html_doc)
 
 
 class Article:
@@ -35,7 +39,7 @@ class Article:
         )
 
     def __repr__(self):
-        return f'Article(title={self.title}, url={self.url}, time={self.time}, content={self.content}'
+        return f"Article(title={self.title}, url={self.url}, time={self.time}, content={self.content}"
 
     @classmethod
     def from_html(cls, html_article):
