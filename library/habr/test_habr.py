@@ -1,6 +1,20 @@
 from bs4 import BeautifulSoup
 
 
+class Article:
+    def __init__(self, title):
+        self.title = title
+
+    @classmethod
+    def from_html(cls, html_article):
+        for link in html_article.find_all("a"):
+            if link["class"][0] == "post__title_link":
+                title = link.string
+                break
+
+        return cls(title)
+
+
 class HabrPage:
     def __init__(self, filename):
         self._filename = filename
@@ -11,7 +25,9 @@ class HabrPage:
 
         html_articles = soup.find_all("article")
 
-        return html_articles
+        articles = [Article.from_html(html_article) for html_article in html_articles]
+
+        return articles
 
 
 class TestHabrPage:
