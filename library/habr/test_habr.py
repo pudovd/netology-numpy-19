@@ -8,6 +8,17 @@ class Article:
         self.time = time
         self.content = content
 
+    def __eq__(self, other):
+        return (
+            self.title == other.title
+            and self.url == other.url
+            and self.time == other.time
+            and self.content[:10] == other.content[:10]
+        )
+
+    def __repr__(self):
+        return f'Article(title={self.title}, url={self.url}, time={self.time}, content={self.content}'
+
     @classmethod
     def from_html(cls, html_article):
         for link in html_article.find_all("a"):
@@ -28,6 +39,13 @@ class Article:
 
         return cls(title=title, url=url, time=time, content=content)
 
+    def has_keywords(self, keywords):
+        for keyword in keywords:
+            if keyword in self.title.lower() or keyword in self.content.lower():
+                return True
+
+        return False
+
 
 class HabrPage:
     def __init__(self, filename):
@@ -42,6 +60,9 @@ class HabrPage:
         articles = [Article.from_html(html_article) for html_article in html_articles]
 
         return articles
+
+    def find_by_keywords(self, keywords):
+        return [post for post in self.posts() if post.has_keywords(keywords)]
 
 
 class TestHabrPage:
@@ -96,3 +117,22 @@ class TestHabrPage:
         assert post.content.startswith(
             "\nЧеловечество использовало оружие с древних времен."
         )
+
+    def test_posts_find_by_keyword(self):
+        # Given
+        habrPage = HabrPage("index.html")
+        keywords = ["python"]
+
+        # When
+        expected_posts = [
+            Article(
+                title="Бесшовная интеграция Microsoft Excel и Word с помощью Python",
+                url="https://habr.com/ru/company/skillfactory/blog/553224/",
+                time="сегодня в 16:02",
+                content="\nХотя в среднем для каждодневных задач автоматизация не требуется",
+            )
+        ]
+        actual_posts = habrPage.find_by_keywords(keywords)
+
+        # Then
+        assert expected_posts == actual_posts
