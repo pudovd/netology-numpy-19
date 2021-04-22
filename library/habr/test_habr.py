@@ -2,9 +2,10 @@ from bs4 import BeautifulSoup
 
 
 class Article:
-    def __init__(self, title, url):
+    def __init__(self, title, url, content):
         self.title = title
         self.url = url
+        self.content = content
 
     @classmethod
     def from_html(cls, html_article):
@@ -14,7 +15,12 @@ class Article:
                 url = link.get("href")
                 break
 
-        return cls(title=title, url=url)
+        for div in html_article.find_all("div"):
+            if "post__text" in div["class"]:
+                content = div.text
+                break
+
+        return cls(title=title, url=url, content=content)
 
 
 class HabrPage:
@@ -62,3 +68,13 @@ class TestHabrPage:
 
         # Then
         assert post.url == "https://habr.com/ru/post/553856/"
+
+    def test_posts_content_startswith(self):
+        # Given
+        habrPage = HabrPage("index.html")
+
+        # When
+        post = habrPage.posts()[0]
+
+        # Then
+        assert post.content.startswith("\nЧеловечество использовало оружие с древних времен.")
