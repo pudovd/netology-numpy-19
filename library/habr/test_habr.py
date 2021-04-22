@@ -11,7 +11,7 @@ class Article:
     @classmethod
     def from_html(cls, html_article):
         for link in html_article.find_all("a"):
-            if link["class"][0] == "post__title_link":
+            if "post__title_link" in link["class"]:
                 title = link.string
                 url = link.get("href")
                 break
