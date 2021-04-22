@@ -15,7 +15,7 @@ class HabrPage:
 
 
 class TestHabrPage:
-    def test_len_posts(self):
+    def test_posts_count(self):
         # Given
         habrPage = HabrPage("index.html")
 
@@ -24,3 +24,13 @@ class TestHabrPage:
 
         # Then
         assert len(posts) == 20
+
+    def test_posts_title(self):
+        # Given
+        habrPage = HabrPage("index.html")
+
+        # When
+        post = habrPage.posts()[0]
+
+        # Then
+        assert post.title == "Кибероружие. Реально ли?"
