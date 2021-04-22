@@ -2,17 +2,19 @@ from bs4 import BeautifulSoup
 
 
 class Article:
-    def __init__(self, title):
+    def __init__(self, title, url):
         self.title = title
+        self.url = url
 
     @classmethod
     def from_html(cls, html_article):
         for link in html_article.find_all("a"):
             if link["class"][0] == "post__title_link":
                 title = link.string
+                url = link.get("href")
                 break
 
-        return cls(title)
+        return cls(title=title, url=url)
 
 
 class HabrPage:
@@ -50,3 +52,13 @@ class TestHabrPage:
 
         # Then
         assert post.title == "Кибероружие. Реально ли?"
+
+    def test_posts_url(self):
+        # Given
+        habrPage = HabrPage("index.html")
+
+        # When
+        post = habrPage.posts()[0]
+
+        # Then
+        assert post.url == "https://habr.com/ru/post/553856/"
