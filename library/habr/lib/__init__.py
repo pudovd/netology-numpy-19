@@ -1,7 +1,10 @@
 from bs4 import BeautifulSoup
+import requests
 
 
 class HabrPage:
+    url = "https://habr.com/ru/all/"
+
     def __init__(self, html_doc):
         self.html_doc = html_doc
 
@@ -21,6 +24,11 @@ class HabrPage:
     def from_filename(cls, filename):
         html_doc = open(filename, "r")
         return HabrPage(html_doc)
+
+    @classmethod
+    def from_internet(cls):
+        r = requests.get(url=cls.url)
+        return HabrPage(r.text)
 
 
 class Article:
